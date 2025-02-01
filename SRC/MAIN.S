@@ -11,6 +11,7 @@ hexa:
 	hex_end:
 	
 init:
+	KDebug.WriteLine "Hello!"
 	move.w	#$8000+%00000100,(VDPCTRL)		;	MODE REGISTER 1
 	move.w	#$8100+%01110100,(VDPCTRL)      ;	MODE REGISTER 2
 	move.w	#$8200+(PLANE_A>>10),(VDPCTRL)  ;	PLANE A LOCATION
@@ -49,7 +50,10 @@ init:
 	move.l	(a0)+,(a1)
 	dbf		d0,	@loadhex1
 	
-	InitTXT	ASCIITXT1,ASCIITXT1_END,$4D020002
+	InitTXT	ASCIITXT1,ASCIITXT1_END,1,1
+	InitTXT	ASCIITXT3,ASCIITXT3_END,1,3
+	InitTXT	ASCIITXT4,ASCIITXT4_END,1,4
+	InitTXT	ASCIITXT2,ASCIITXT2_END,1,26
 	
 	jsr		INITJOYPADS	;	init controller
 	move	#$2300,sr
@@ -61,43 +65,43 @@ init:
 @loop:
 	jsr		VSync
 	btst	#bitL,	JOYPADPRESS
-	bne.s	@sub1
+	bne.w	@L
 	btst	#bitR,	JOYPADPRESS
-	bne.s	@add1
+	bne.w	@R
 	btst	#bitUp,	JOYPADPRESS
-	bne.s	@add10
+	bne.w	@U
 	btst	#bitDn,	JOYPADPRESS
-	bne.s	@sub10
+	bne.w	@D
 	move.b	JOYPADPRESS,	d0
 	and.b	#btnABC,	d0
 	tst.b	d0
-	bne.s	@playSnd
-	bra.s	@loop
-	
-@sub1
-	sub.b	#1,	HEXADDR
-	bsr.w	DispHex
-	bra.s	@loop
-@add1
-	add.b	#1,	HEXADDR
-	bsr.w	DispHex
-	bra.s	@loop
-@sub10
-	sub.b	#$10,	HEXADDR
-	bsr.w	DispHex
-	bra.s	@loop
-@add10
-	add.b	#$10,	HEXADDR
-	bsr.w	DispHex
-	bra.s	@loop
-@playSnd
-	move.l	#0,	d0
-	move.b	HEXADDR,	d0
-	move.l	d0,-(sp)
+	bne.w	@action
 	bra.w	@loop
 	
-ASCIITXT1:	dc.b	'CREATED BY MDTRAVIS '
+@L
+	KDebug.WriteLine "Left!"
+	bra.w	@loop
+@R
+	KDebug.WriteLine "Right!"
+	bra.w	@loop
+@U
+	KDebug.WriteLine "Up!"
+	bra.w	@loop
+@D
+	KDebug.WriteLine "Down!"
+	bra.w	@loop
+@action
+	KDebug.WriteLine "Action!"
+	bra.w	@loop
+	
+ASCIITXT1:	dc.b	'USE BLASTEM OR CLOWNMDEMU '
 	ASCIITXT1_END:
+ASCIITXT2:	dc.b	'CREATED BY MDTRAVIS '
+	ASCIITXT2_END:
+ASCIITXT3:	dc.b	'IF A CONSOLE WINDOW APPEARS,'
+	ASCIITXT3_END:
+ASCIITXT4:	dc.b	'PROCEED WITH TESTING. '
+	ASCIITXT4_END:
 
 loadASCII2
 @loop
