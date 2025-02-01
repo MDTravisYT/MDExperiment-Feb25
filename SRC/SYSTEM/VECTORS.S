@@ -1,22 +1,22 @@
 	dc.l	InitSP
 	dc.l	init
-	dc.l	errBus
-	dc.l	errAddress
-	dc.l	errIllegal
-	dc.l	errZeroDiv
-	dc.l	errChkInst
-	dc.l	errTrapV
-	dc.l	errPriViol
-	dc.l	errTrace
-	dc.l	errLine1010
-	dc.l	errLine1111
+	dc.l	BusError
+	dc.l	AddressError
+	dc.l	IllegalInstr
+	dc.l	ZeroDivide
+	dc.l	ChkInstr
+	dc.l	TrapvInstr
+	dc.l	PrivilegeViol
+	dc.l	Trace
+	dc.l	Line1010Emu
+	dc.l	Line1111Emu
 	dcb.l	12,0					; Reserved by Motorola
 	dc.l	0,		0,		0,		0
 	dc.l	HInt,	0,		VInt,	0
-	dc.l	trap,	trap,	trap,	trap
-	dc.l	trap,	trap,	trap,	trap
-	dc.l	trap,	trap,	trap,	trap
-	dc.l	trap,	trap,	trap,	trap
+	dc.l	ErrorExcept,	ErrorExcept,	ErrorExcept,	ErrorExcept
+	dc.l	ErrorExcept,	ErrorExcept,	ErrorExcept,	ErrorExcept
+	dc.l	ErrorExcept,	ErrorExcept,	ErrorExcept,	ErrorExcept
+	dc.l	ErrorExcept,	ErrorExcept,	ErrorExcept,	ErrorExcept
 	dcb.l	16,0					; Reserved by Motorola
 	dc.b	'SEGA MEGA DRIVE '		;	SYSTEM
 	dc.b	'MDTRAVIS2025.FEB'		;	DATE

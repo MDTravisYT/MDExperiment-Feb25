@@ -1,12 +1,12 @@
+	include		"Debugger.asm"
 	include		"src/system/macros.i"
 	include		"src/system/equates.i"
 	include		"src/system/vectors.s"
-	include		"src/system/error.s"
 	include		"src/system/interrupt.s"
 ascii:
 	incbin		"src/ascii.art"
 	ascii_end:
-hex:
+hexa:
 	incbin		"src/hex.art"
 	hex_end:
 	
@@ -41,9 +41,9 @@ init:
 @loadASCII1
 	move.l	(a0)+,(a1)
 	dbf		d0,	@loadASCII1
-	lea		hex,	a0
+	lea		hexa,	a0
 	lea		VDPDATA,a1
-	move.l	#(hex_end-hex)/4-1,	d0
+	move.l	#(hex_end-hexa)/4-1,	d0
 	move.l	#VRAMWRITE+1,(VDPCTRL)
 @loadhex1
 	move.l	(a0)+,(a1)
@@ -215,3 +215,5 @@ WordToBcd:
     move.w    d0,d1                    ; Get result
     move.w    (sp)+,d0                ; Restore d0
     rts
+	
+	include		"ErrorHandler.asm"
