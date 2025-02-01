@@ -3,7 +3,6 @@
 	include		"src/system/vectors.s"
 	include		"src/system/error.s"
 	include		"src/system/interrupt.s"
-	include		"GEMS/sound.s"
 ascii:
 	incbin		"src/ascii.art"
 	ascii_end:
@@ -50,15 +49,8 @@ init:
 	move.l	(a0)+,(a1)
 	dbf		d0,	.loadhex1
 	
-	InitTXT	ASCIITXT1,ASCIITXT1_END,$40820002
-	InitTXT	ASCIITXT2,ASCIITXT2_END,$4D020002
-	InitTXT	ASCIITXT3,ASCIITXT3_END,$48020002
-	InitTXT	ASCIITXT4,ASCIITXT4_END,$48820002
-	InitTXT	ASCIITXT5,ASCIITXT5_END,$49020002
-	InitTXT	ASCIITXT6,ASCIITXT6_END,$45820002
-	InitTXT	ASCIITXT7,ASCIITXT7_END,$46020002
+	InitTXT	ASCIITXT1,ASCIITXT1_END,$4D020002
 	
-	jsr		_sfxinit	;	init GEMS
 	jsr		INITJOYPADS	;	init controller
 	move	#$2300,sr
 	
@@ -99,28 +91,13 @@ init:
 	bsr.w	DispHex
 	bra.s	.loop
 .playSnd
-	jsr	_gemsstopall
 	move.l	#0,	d0
 	move.b	HEXADDR,	d0
 	move.l	d0,-(sp)
-	jsr	_gemsstartsong		; start song
-	adda.w	#4,sp
 	bra.w	.loop
 	
-ASCIITXT1:	dc.b	'GEMS SOURCE SOUND PLAYER'
+ASCIITXT1:	dc.b	'CREATED BY MDTRAVIS '
 	ASCIITXT1_END:
-ASCIITXT2:	dc.b	'CREATED BY MDTRAVIS '
-	ASCIITXT2_END:
-ASCIITXT3:	dc.b	'PRESS ABC TO PLAY SOUND '
-	ASCIITXT3_END:
-ASCIITXT4:	dc.b	'PRESS LR TO SWITCH SOUND BY 1 '
-	ASCIITXT4_END:
-ASCIITXT5:	dc.b	'PRESS UD TO SWITCH SOUND BY 10 (16) '
-	ASCIITXT5_END:
-ASCIITXT6:	dc.b	'SOUND HEX: 00 '
-	ASCIITXT6_END:
-ASCIITXT7:	dc.b	'SOUND DEC: 000'
-	ASCIITXT7_END:
 
 loadASCII2
 .loop
