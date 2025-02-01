@@ -38,16 +38,16 @@ init:
 	lea		VDPDATA,a1
 	move.l	#(ascii_end-ascii)/4-1,	d0
 	move.l	#VRAMWRITE+$4000000,(VDPCTRL)
-.loadASCII1
+@loadASCII1
 	move.l	(a0)+,(a1)
-	dbf		d0,	.loadASCII1
+	dbf		d0,	@loadASCII1
 	lea		hex,	a0
 	lea		VDPDATA,a1
 	move.l	#(hex_end-hex)/4-1,	d0
 	move.l	#VRAMWRITE+1,(VDPCTRL)
-.loadhex1
+@loadhex1
 	move.l	(a0)+,(a1)
-	dbf		d0,	.loadhex1
+	dbf		d0,	@loadhex1
 	
 	InitTXT	ASCIITXT1,ASCIITXT1_END,$4D020002
 	
@@ -58,57 +58,57 @@ init:
 	move.l	#$0EEE,VDPDATA
 	move.w	#$0444,VDPDATA
 	
-.loop:
+@loop:
 	jsr		VSync
 	btst	#bitL,	JOYPADPRESS
-	bne.s	.sub1
+	bne.s	@sub1
 	btst	#bitR,	JOYPADPRESS
-	bne.s	.add1
+	bne.s	@add1
 	btst	#bitUp,	JOYPADPRESS
-	bne.s	.add10
+	bne.s	@add10
 	btst	#bitDn,	JOYPADPRESS
-	bne.s	.sub10
+	bne.s	@sub10
 	move.b	JOYPADPRESS,	d0
 	and.b	#btnABC,	d0
 	tst.b	d0
-	bne.s	.playSnd
-	bra.s	.loop
+	bne.s	@playSnd
+	bra.s	@loop
 	
-.sub1
+@sub1
 	sub.b	#1,	HEXADDR
 	bsr.w	DispHex
-	bra.s	.loop
-.add1
+	bra.s	@loop
+@add1
 	add.b	#1,	HEXADDR
 	bsr.w	DispHex
-	bra.s	.loop
-.sub10
+	bra.s	@loop
+@sub10
 	sub.b	#$10,	HEXADDR
 	bsr.w	DispHex
-	bra.s	.loop
-.add10
+	bra.s	@loop
+@add10
 	add.b	#$10,	HEXADDR
 	bsr.w	DispHex
-	bra.s	.loop
-.playSnd
+	bra.s	@loop
+@playSnd
 	move.l	#0,	d0
 	move.b	HEXADDR,	d0
 	move.l	d0,-(sp)
-	bra.w	.loop
+	bra.w	@loop
 	
 ASCIITXT1:	dc.b	'CREATED BY MDTRAVIS '
 	ASCIITXT1_END:
 
 loadASCII2
-.loop
+@loop
 	move.b	(a0)+,d1
 	move.w	d1,	(a1)
-	dbf		d0,	.loop
+	dbf		d0,	@loop
 	rts
 	
 DispHex
 ;	btst	#7,	HEXADDR
-;	beq.s	.cont
+;	beq.s	@cont
 ;	and.b	#$7F, HEXADDR
 ;.cont
 	moveq	#0,	d0
@@ -157,14 +157,14 @@ DispHex
 	
 VSync:	;	code from ProjectFM
     lea     ($C00004),a6
-.Loop1:                             ; Wait until current VBlank is over
+@loop1:                             ; Wait until current VBlank is over
     move.w    (a6),d7
     btst.l    #3,d7
-    bne.s    .Loop1
-.Loop2:                             ; Wait until next VBlank starts
+    bne.s    @loop1
+@loop2:                             ; Wait until next VBlank starts
     move.w    (a6),d7
     btst.l    #3,d7
-    beq.s    .Loop2
+    beq.s    @loop2
     rts                             ; End of subroutine
 	
 	include		"SRC/SYSTEM/JOYPAD.S"
